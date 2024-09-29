@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from goods_list import goods
+from goods.models import Categories, Products
 
 
 def catalog(request):
+    goods = Products.objects.all()
     context = {
         "title": "Home - Catalog",
-        'goods': goods
+        'goods': goods,
     }
     return render(request, "goods/catalog.html", context=context)
 
