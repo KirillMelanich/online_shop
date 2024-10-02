@@ -21,12 +21,12 @@ from django.urls import path, include
 from app import settings
 from django.conf.urls.static import static
 
-from main import views
 
 urlpatterns = [
     path("admin/", admin.site.urls, name="admin"),
     path('', include('main.urls', namespace='main')),
     path('catalog/', include('goods.urls', namespace='catalog')),
+    path('user/', include('users.urls', namespace='user')),
 ]
 
 if settings.DEBUG:
