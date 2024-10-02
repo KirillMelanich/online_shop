@@ -15,7 +15,8 @@ from pathlib import Path
 
 # Initialize environment variables
 env = environ.Env()
-environ.Env.read_env()
+# env.read_env()
+environ.Env.read_env(Path(__file__).resolve().parent.parent / '.env')
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -42,6 +43,7 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.postgres",
 
     # 3rd party apps
     'debug_toolbar',
@@ -160,3 +162,4 @@ INTERNAL_IPS = [
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
