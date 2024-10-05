@@ -19,7 +19,7 @@ def login(request):
     else:
         form = UserLoginForm()
 
-    context = {"title": "Login", "form": form}
+    context = {"title": "Home - Authorization", "form": form}
     return render(request, "users/login.html", context=context)
 
 
