@@ -6,6 +6,7 @@ class User(AbstractUser):
     image = models.ImageField(
         upload_to="users_images/", null=True, blank=True, verbose_name="Avatar"
     )
+    phone_number = models.CharField(max_length=15, verbose_name="Phone number", default="")
 
     class Meta:
         db_table = "user"
