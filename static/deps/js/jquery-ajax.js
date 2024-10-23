@@ -1,10 +1,9 @@
 // When the HTML document is ready (rendered)
 $(document).ready(function () {
-    // Assign the markup element with the id jq-notification to a variable for AJAX notifications
-
+    // Store the markup element with the id jq-notification for ajax notifications in a variable
     var successMessage = $("#jq-notification");
 
-// Catch the click event on the add to cart button
+    // Capture the click event on the 'add to cart' button
     $(document).on("click", ".add-to-cart", function (e) {
         // Block its default action
         e.preventDefault();
@@ -28,10 +27,10 @@ $(document).ready(function () {
                 csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val(),
             },
             success: function (data) {
-                // Message
+                // Display the message
                 successMessage.html(data.message);
                 successMessage.fadeIn(400);
-                // Remove the message after 7 seconds
+                // Hide the message after 7 seconds
                 setTimeout(function () {
                     successMessage.fadeOut(400);
                 }, 7000);
@@ -40,20 +39,19 @@ $(document).ready(function () {
                 cartCount++;
                 goodsInCartCount.text(cartCount);
 
-                // Update the cart content with the response from django (newly rendered cart fragment)
+                // Update the cart contents with the response from django (newly rendered cart fragment)
                 var cartItemsContainer = $("#cart-items-container");
                 cartItemsContainer.html(data.cart_items_html);
 
             },
 
             error: function (data) {
-                console.log("Error while adding the product to the cart");
+                console.log("Error when adding product to cart");
             },
         });
     });
 
-
-    // Catch the click event on the button to remove the product from the cart
+    // Capture the click event on the 'remove from cart' button
     $(document).on("click", ".remove-from-cart", function (e) {
         // Block its default action
         e.preventDefault();
@@ -69,6 +67,7 @@ $(document).ready(function () {
 
         // Make a POST request via ajax without reloading the page
         $.ajax({
+
             type: "POST",
             url: remove_from_cart,
             data: {
@@ -76,31 +75,32 @@ $(document).ready(function () {
                 csrfmiddlewaretoken: $("[name=csrfmiddlewaretoken]").val(),
             },
             success: function (data) {
-                // Message
+                // Display the message
                 successMessage.html(data.message);
                 successMessage.fadeIn(400);
-                // Remove the message after 7 seconds
+                // Hide the message after 7 seconds
                 setTimeout(function () {
                     successMessage.fadeOut(400);
                 }, 7000);
 
-                // Decrease the number of items in the cart (rendering)
+                // Decrease the number of items in the cart (render)
                 cartCount -= data.quantity_deleted;
                 goodsInCartCount.text(cartCount);
 
-                // Update the cart content with the response from django (newly rendered cart fragment)
+                // Update the cart contents with the response from django (newly rendered cart fragment)
                 var cartItemsContainer = $("#cart-items-container");
                 cartItemsContainer.html(data.cart_items_html);
+
             },
 
             error: function (data) {
-                console.log("Error while adding the product to the cart");
+                console.log("Error when adding product to cart");
             },
         });
     });
 
-// Now + - quantity of the product
-// Event handler for decreasing the value
+    // Now for the +/- product quantity
+    // Event handler for decreasing the value
     $(document).on("click", ".decrement", function () {
         // Get the link to the django controller from the data-cart-change-url attribute
         var url = $(this).data("cart-change-url");
@@ -110,16 +110,16 @@ $(document).ready(function () {
         var $input = $(this).closest('.input-group').find('.number');
         // Get the current quantity value
         var currentValue = parseInt($input.val());
-        // If the quantity is more than one, only then decrease by 1
+        // If the quantity is greater than one, decrease by 1
         if (currentValue > 1) {
             $input.val(currentValue - 1);
             // Call the function defined below
-            // with arguments (cart id, new quantity, whether the quantity decreased or increased, url)
+            // with arguments (cart id, new quantity, quantity decreased or increased, url)
             updateCart(cartID, currentValue - 1, -1, url);
         }
     });
 
-// Event handler for increasing the value
+    // Event handler for increasing the value
     $(document).on("click", ".increment", function () {
         // Get the link to the django controller from the data-cart-change-url attribute
         var url = $(this).data("cart-change-url");
@@ -133,7 +133,7 @@ $(document).ready(function () {
         $input.val(currentValue + 1);
 
         // Call the function defined below
-        // with arguments (cart id, new quantity, whether the quantity decreased or increased, url)
+        // with arguments (cart id, new quantity, quantity decreased or increased, url)
         updateCart(cartID, currentValue + 1, 1, url);
     });
 
@@ -148,10 +148,10 @@ $(document).ready(function () {
             },
 
             success: function (data) {
-                // Message
+                // Display the message
                 successMessage.html(data.message);
                 successMessage.fadeIn(400);
-                // Remove the message after 7 seconds
+                // Hide the message after 7 seconds
                 setTimeout(function () {
                     successMessage.fadeOut(400);
                 }, 7000);
@@ -162,20 +162,20 @@ $(document).ready(function () {
                 cartCount += change;
                 goodsInCartCount.text(cartCount);
 
-                // Update the cart content
+                // Update the cart contents
                 var cartItemsContainer = $("#cart-items-container");
                 cartItemsContainer.html(data.cart_items_html);
+
             },
             error: function (data) {
-                console.log("Error while adding the product to the cart");
+                console.log("Error when adding product to cart");
             },
         });
     }
 
-
-    // We take the element from the markup by id - notifications from django
+    // Get the markup element by id - notifications from django
     var notification = $('#notification');
-    // And after 7 seconds, remove it
+    // Hide it after 7 seconds
     if (notification.length > 0) {
         setTimeout(function () {
             notification.alert('close');
@@ -185,18 +185,19 @@ $(document).ready(function () {
     // When clicking on the cart icon, open the popup (modal) window
     $('#modalButton').click(function () {
         $('#exampleModal').appendTo('body');
+
         $('#exampleModal').modal('show');
     });
 
-    // Event click on the close button of the cart window
+    // Click event for the cart window close button
     $('#exampleModal .btn-close').click(function () {
         $('#exampleModal').modal('hide');
     });
 
-    // Event handler for the radio button to select the delivery method
+    // Event handler for selecting the delivery method radio button
     $("input[name='requires_delivery']").change(function () {
         var selectedValue = $(this).val();
-        // Hide or show the input field for the delivery address
+        // Show or hide the delivery address input field
         if (selectedValue === "1") {
             $("#deliveryAddressField").show();
         } else {
@@ -204,4 +205,26 @@ $(document).ready(function () {
         }
     });
 
+    // Phone number input formatting in the form (xxx) xxx-xxxx
+    document.getElementById('id_phone_number').addEventListener('input', function (e) {
+        var x = e.target.value.replace(/\D/g, '').match(/(\d{0,3})(\d{0,3})(\d{0,4})/);
+        e.target.value = !x[2] ? x[1] : '(' + x[1] + ') ' + x[2] + (x[3] ? '-' + x[3] : '');
+    });
+
+    // Client-side phone number validation in the form xxx-xxx-xx-xx
+    $('#create_order_form').on('submit', function (event) {
+        var phoneNumber = $('#id_phone_number').val();
+        var regex = /^\(\d{3}\) \d{3}-\d{4}$/;
+
+        if (!regex.test(phoneNumber)) {
+            $('#phone_number_error').show();
+            event.preventDefault();
+        } else {
+            $('#phone_number_error').hide();
+
+            // Clean the phone number from parentheses and dashes before submitting the form
+            var cleanedPhoneNumber = phoneNumber.replace(/[()\-\s]/g, '');
+            $('#id_phone_number').val(cleanedPhoneNumber);
+        }
+    });
 });

@@ -16,15 +16,31 @@ class OrderitemQueryset(models.QuerySet):
 
 
 class Order(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.SET_DEFAULT, blank=True, null=True, verbose_name="User",
-                             default=None)
-    created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Order creation date")
+    user = models.ForeignKey(
+        to=User,
+        on_delete=models.SET_DEFAULT,
+        blank=True,
+        null=True,
+        verbose_name="User",
+        default=None,
+    )
+    created_timestamp = models.DateTimeField(
+        auto_now_add=True, verbose_name="Order creation date"
+    )
     phone_number = models.CharField(max_length=20, verbose_name="Phone number")
-    requires_delivery = models.BooleanField(default=False, verbose_name="Requires delivery")
-    delivery_address = models.TextField(null=True, blank=True, verbose_name="Delivery address")
-    payment_on_get = models.BooleanField(default=False, verbose_name="Payment upon receipt")
+    requires_delivery = models.BooleanField(
+        default=False, verbose_name="Requires delivery"
+    )
+    delivery_address = models.TextField(
+        null=True, blank=True, verbose_name="Delivery address"
+    )
+    payment_on_get = models.BooleanField(
+        default=False, verbose_name="Payment upon receipt"
+    )
     is_paid = models.BooleanField(default=False, verbose_name="Paid")
-    status = models.CharField(max_length=50, default='Processing', verbose_name="Order status")
+    status = models.CharField(
+        max_length=50, default="Processing", verbose_name="Order status"
+    )
 
     class Meta:
         db_table = "order"
@@ -37,12 +53,19 @@ class Order(models.Model):
 
 class OrderItem(models.Model):
     order = models.ForeignKey(to=Order, on_delete=models.CASCADE, verbose_name="Order")
-    product = models.ForeignKey(to=Products, on_delete=models.SET_DEFAULT, null=True, verbose_name="Product",
-                                default=None)
+    product = models.ForeignKey(
+        to=Products,
+        on_delete=models.SET_DEFAULT,
+        null=True,
+        verbose_name="Product",
+        default=None,
+    )
     name = models.CharField(max_length=150, verbose_name="Name")
     price = models.DecimalField(max_digits=7, decimal_places=2, verbose_name="Price")
     quantity = models.PositiveIntegerField(default=0, verbose_name="Quantity")
-    created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Sale date")
+    created_timestamp = models.DateTimeField(
+        auto_now_add=True, verbose_name="Sale date"
+    )
 
     class Meta:
         db_table = "order_item"
@@ -56,4 +79,3 @@ class OrderItem(models.Model):
 
     def __str__(self):
         return f"Product {self.name} | Order № {self.order.pk}"
-

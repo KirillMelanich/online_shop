@@ -15,8 +15,12 @@ class CartQueryset(models.QuerySet):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(to=User, on_delete=models.CASCADE, null=True, blank=True, verbose_name="User")
-    product = models.ForeignKey(to=Products, on_delete=models.CASCADE, verbose_name="Product")
+    user = models.ForeignKey(
+        to=User, on_delete=models.CASCADE, null=True, blank=True, verbose_name="User"
+    )
+    product = models.ForeignKey(
+        to=Products, on_delete=models.CASCADE, verbose_name="Product"
+    )
     quantity = models.PositiveIntegerField(default=0, verbose_name="Quantity")
     session_key = models.CharField(max_length=32, blank=True, null=True)
     created_timestamp = models.DateTimeField(auto_now_add=True, verbose_name="Created")
@@ -33,5 +37,7 @@ class Cart(models.Model):
 
     def __str__(self):
         if self.user:
-            return f"Cart: {self.user} | Product {self.product} | Quantity {self.quantity}"
+            return (
+                f"Cart: {self.user} | Product {self.product} | Quantity {self.quantity}"
+            )
         return f"Anonymous cart | Product {self.product} | Quantity {self.quantity}"

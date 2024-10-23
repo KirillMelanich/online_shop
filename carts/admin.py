@@ -15,7 +15,3 @@ class CartTabAdmin(admin.TabularInline):
 class CartAdmin(admin.ModelAdmin):
     list_display = ["user", "product", "quantity", "created_timestamp"]
     list_filter = ["user", "product", "created_timestamp"]
-
-
-
-
