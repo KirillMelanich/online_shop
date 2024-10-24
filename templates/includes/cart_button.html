@@ -27,11 +27,6 @@
           {% include "carts/includes/included_cart.html" %}
           <!-- Cart layout ends -->
         </div>
-        {% if carts %}
-          <a class="btn btn-dark" href="{% url 'orders:create_order' %}">
-            Place order
-          </a>
-        {% endif %}
 
       </div>
     </div>
