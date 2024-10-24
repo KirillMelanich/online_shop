@@ -16,16 +16,16 @@ from users.forms import ProfileForm, UserLoginForm, UserRegistrationForm
 
 
 class UserLoginView(LoginView):
-    template_name = 'users/login.html'
+    template_name = "users/login.html"
     form_class = UserLoginForm
 
     # success_url = reverse_lazy('main:index')
 
     def get_success_url(self):
-        redirect_page = self.request.POST.get('next', None)
-        if redirect_page and redirect_page != reverse('user:logout'):
+        redirect_page = self.request.POST.get("next", None)
+        if redirect_page and redirect_page != reverse("user:logout"):
             return redirect_page
-        return reverse_lazy('main:index')
+        return reverse_lazy("main:index")
 
     def form_valid(self, form):
         session_key = self.request.session.session_key
@@ -48,14 +48,14 @@ class UserLoginView(LoginView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Home - Авторизация'
+        context["title"] = "Home - Авторизация"
         return context
 
 
 class UserRegistrationView(CreateView):
-    template_name = 'users/registration.html'
+    template_name = "users/registration.html"
     form_class = UserRegistrationForm
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy("users:profile")
 
     def form_valid(self, form):
         session_key = self.request.session.session_key
@@ -68,19 +68,22 @@ class UserRegistrationView(CreateView):
         if session_key:
             Cart.objects.filter(session_key=session_key).update(user=user)
 
-        messages.success(self.request, f"{user.username}, Вы успешно зарегистрированы и вошли в аккаунт")
+        messages.success(
+            self.request,
+            f"{user.username}, Вы успешно зарегистрированы и вошли в аккаунт",
+        )
         return HttpResponseRedirect(self.success_url)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Home - Регистрация'
+        context["title"] = "Home - Регистрация"
         return context
 
 
 class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
-    template_name = 'users/profile.html'
+    template_name = "users/profile.html"
     form_class = ProfileForm
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy("users:profile")
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -95,26 +98,32 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Home - Кабинет'
+        context["title"] = "Home - Кабинет"
 
         # Можно вынести сам запрос в отдельный метод этого класса контроллера
-        orders = Order.objects.filter(user=self.request.user).prefetch_related(
-            Prefetch(
-                "orderitem_set",
-                queryset=OrderItem.objects.select_related("product"),
+        orders = (
+            Order.objects.filter(user=self.request.user)
+            .prefetch_related(
+                Prefetch(
+                    "orderitem_set",
+                    queryset=OrderItem.objects.select_related("product"),
+                )
             )
-        ).order_by("-id")
+            .order_by("-id")
+        )
 
-        context['orders'] = self.set_get_cache(orders, f"user_{self.request.user.id}_orders", 60)
+        context["orders"] = self.set_get_cache(
+            orders, f"user_{self.request.user.id}_orders", 60
+        )
         return context
 
 
 class UserCartView(TemplateView):
-    template_name = 'users/users_cart.html'
+    template_name = "users/users_cart.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['title'] = 'Home - Корзина'
+        context["title"] = "Home - Корзина"
         return context
 
 
@@ -122,4 +131,4 @@ class UserCartView(TemplateView):
 def logout(request):
     messages.success(request, f"{request.user.username}, Вы вышли из аккаунта")
     auth.logout(request)
-    return redirect(reverse('main:index'))
+    return redirect(reverse("main:index"))

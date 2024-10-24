@@ -63,6 +63,3 @@ class OrderAdmin(admin.ModelAdmin):
         "is_paid",
     )
     inlines = (OrderItemTabulareAdmin,)
-
-
-# Register your models here.
