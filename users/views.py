@@ -39,16 +39,16 @@ class UserLoginView(LoginView):
                 forgot_carts = Cart.objects.filter(user=user)
                 if forgot_carts.exists():
                     forgot_carts.delete()
-                # add new authorized user carts from anonimous session
+                # add new authorized user carts from anonymous session
                 Cart.objects.filter(session_key=session_key).update(user=user)
 
-                messages.success(self.request, f"{user.username}, Вы вошли в аккаунт")
+                messages.success(self.request, f"{user.username}, you have successfully logged in")
 
                 return HttpResponseRedirect(self.get_success_url())
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Home - Авторизация"
+        context["title"] = "Home - Authorization"
         return context
 
 
@@ -70,13 +70,13 @@ class UserRegistrationView(CreateView):
 
         messages.success(
             self.request,
-            f"{user.username}, Вы успешно зарегистрированы и вошли в аккаунт",
+            f"{user.username}, you have successfully registered and logged in",
         )
         return HttpResponseRedirect(self.success_url)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Home - Регистрация"
+        context["title"] = "Home - Registration"
         return context
 
 
@@ -89,18 +89,18 @@ class UserProfileView(LoginRequiredMixin, CacheMixin, UpdateView):
         return self.request.user
 
     def form_valid(self, form):
-        messages.success(self.request, "Профайл успешно обновлен")
+        messages.success(self.request, "Profile successfully updated")
         return super().form_valid(form)
 
     def form_invalid(self, form):
-        messages.error(self.request, "Произошла ошибка")
+        messages.error(self.request, "An error occurred")
         return super().form_invalid(form)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Home - Кабинет"
+        context["title"] = "Home - Profile"
 
-        # Можно вынести сам запрос в отдельный метод этого класса контроллера
+        # You can move the query itself to a separate method of this controller class
         orders = (
             Order.objects.filter(user=self.request.user)
             .prefetch_related(
@@ -123,12 +123,13 @@ class UserCartView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["title"] = "Home - Корзина"
+        context["title"] = "Home - Cart"
         return context
 
 
 @login_required
 def logout(request):
-    messages.success(request, f"{request.user.username}, Вы вышли из аккаунта")
+    messages.success(request, f"{request.user.username}, you have successfully logged out")
     auth.logout(request)
     return redirect(reverse("main:index"))
+
